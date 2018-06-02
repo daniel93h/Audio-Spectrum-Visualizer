@@ -9,28 +9,26 @@ Christopher Edberg
 
 #include<LedControl.h>
 
+//connections of the MAX7219
 int DIN = 12;
 int CS = 11;
 int CLK = 10;
 
 //globals
 
-
+//analog ins
 int lowIn = 0;
 int midLowIn = 1;
 int midHighIn = 2;
 int highIn = 3;
-/*
-int switch1 = 4;
-int switch2 = 5;
-int switch3 = 6;
-int switch4 = 7;
-*/
+
+//initiations for the loop
 int readLow;
 int readMidLow;
 int readMidHigh;
 int readHigh;
 
+//Arrays for different figures.
 byte smile[8]= {0x30,0x63,0xC3,0xD8,0xD8,0xC3,0x63,0x30}; //{0x3C,0x42,0xA5,0x81,0xA5,0x99,0x42,0x3C};
 byte ten[8]= {0x00,0x02,0xFF,0x00,0x7E,0x81,0x81,0x7E};
 byte nine[8]={0x00,0x00,0x00,0x4E,0x91,0x91,0x7E,0x00};
@@ -51,6 +49,7 @@ byte zero[8]={0x00,0x00,0x00,0x7E,0x81,0x81,0x7E,0x00};
 
 LedControl lc = LedControl(DIN, CLK, CS, 0);
 
+//An array for setRow (10000000,11000000,11100000,11110000,11111000,11111100,11111110,11111111)
 byte row[]=
 {
   0x80,
@@ -73,7 +72,7 @@ void setup() {
     lc.setIntensity(0,15); //set the brightness to maximum
     lc.clearDisplay(0);    //clear the display
 
-    
+    //print a countdown on startup
     printByte(ten);
     delay(1500);
     printByte(nine);
@@ -118,17 +117,8 @@ void loop() {
     readMidHigh = constrain(readMidHigh, 20, 580);
     readHigh = constrain(readHigh, 20, 580);
 
-/*
-lc.setRow(0,7,row[7]);
-delay(100);
-lc.setRow(0,7,row[5]);
-delay(100);
-lc.setRow(0,7,row[3]);
-delay(100);
-lc.setRow(0,7,row[1]);
-delay(100);
-*/
 
+    //set rows 0 and 1 according to lowIn
     if(readLow <= 20)
     {
       lc.setRow(0,0,row[0]);
@@ -171,7 +161,7 @@ delay(100);
     }
 
     
-
+    //set rows 2 and 3 according to midLowIn
     if(readMidLow <= 20){
       lc.setRow(0,2,row[0]);
       lc.setRow(0,3,row[0]);
@@ -206,7 +196,7 @@ delay(100);
     }
 
 
-
+    //set rows 4 and 5 according to midHighIn
     if(readMidHigh <= 20){
       lc.setRow(0,4,row[0]);
       lc.setRow(0,5,row[0]);
@@ -241,7 +231,7 @@ delay(100);
     }
 
 
-
+    //set rows 6 and 7 according to highIn
     if(readHigh <= 20){
       lc.setRow(0,6,row[0]);
       lc.setRow(0,7,row[0]);
@@ -276,35 +266,10 @@ delay(100);
     }
 
 
-   // byte smile[8]=   {0x3C,0x42,0xA5,0x81,0xA5,0x99,0x42,0x3C};
-   // printByte(smile);
-/*
- * 
- * TODO: reset peakdetectors & open them yadiyadiya-.-
- * 
- */
-
-
-/*
-  //reset peak detectors
-  digitalWrite(switch1, HIGH);
-  digitalWrite(switch2, HIGH);
-  digitalWrite(switch3, HIGH);
-  digitalWrite(switch4, HIGH);
-  delay(10);
-  digitalWrite(switch1, LOW);
-  digitalWrite(switch2, LOW);
-  digitalWrite(switch3, LOW);
-  digitalWrite(switch4, LOW);
-  */
   delay(1);
 }
-&/*
-void printRow(byte character [])
-{
-    lc.setRow(0,0,character[0]);
-}
-*/
+
+//prints an image
 void printByte(byte character [])
 {
   int i = 0;
